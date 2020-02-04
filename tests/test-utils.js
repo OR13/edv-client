@@ -12,6 +12,26 @@ const _x25519Expected = {
   kty: 'OKP'
 };
 
+export function isNewEDV({inserted, testId, hmac, sequence = 0}) {
+  should.exist(inserted);
+  inserted.should.be.an('object');
+  inserted.id.should.equal(testId);
+  inserted.sequence.should.equal(sequence);
+  inserted.indexed.should.be.an('array');
+  inserted.indexed.length.should.equal(1);
+  inserted.indexed[0].should.be.an('object');
+  inserted.indexed[0].sequence.should.equal(1);
+  inserted.indexed[0].hmac.should.be.an('object');
+  inserted.indexed[0].hmac.should.deep.equal(hmac);
+  inserted.indexed[0].attributes.should.be.an('array');
+  inserted.jwe.should.be.an('object');
+  inserted.jwe.protected.should.be.a('string');
+  inserted.jwe.recipients.should.be.an('array');
+  inserted.jwe.iv.should.be.a('string');
+  inserted.jwe.ciphertext.should.be.a('string');
+  inserted.jwe.tag.should.be.a('string');
+}
+
 export function isRecipient({recipient, expected = _x25519Expected}) {
   const {kid, alg, crv, kty} = expected;
   expect(recipient, 'Expected recipient to be an object').to.be.an('object');
